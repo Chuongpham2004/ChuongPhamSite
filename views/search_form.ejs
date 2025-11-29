@@ -1,0 +1,86 @@
+<div class="container mx-auto px-4 md:px-8">
+
+    <div class="bg-indigo-50 py-16 px-4 md:px-8 mb-12 rounded-xl shadow-2xl">
+        <div class="max-w-4xl mx-auto text-center">
+
+            <h1 class="text-5xl font-extrabold text-gray-900 mb-4">
+                Kho ảnh Unsplash Khổng Lồ
+            </h1>
+            <p class="text-xl text-indigo-700 mb-8">
+                Nhập bất kỳ từ khóa nào bạn muốn để tìm kiếm những bức ảnh chất lượng cao.
+            </p>
+
+            <form action="/search" method="GET" class="flex flex-col sm:flex-row gap-3 justify-center">
+
+                <input
+                        type="text"
+                        id="query"
+                        name="query"
+                        placeholder="Tìm kiếm ảnh (ví dụ: architecture, nature, code)..."
+                        value="<%= query %>"
+                        required
+                        class="flex-grow p-4 border-2 border-indigo-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-400 focus:border-indigo-500 text-lg shadow-inner transition duration-300"
+                >
+
+                <button
+                        type="submit"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg transition duration-300 ease-in-out shadow-xl hover:shadow-2xl sm:w-auto w-full transform hover:scale-[1.05]"
+                >
+                    🔍 Tìm Kiếm
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-8" role="alert">
+            <strong class="font-bold">Lỗi!</strong>
+            <span class="block sm:inline"> <%= error %></span>
+        </div>
+    <% } %>
+
+    <% if (typeof images !== 'undefined' && images && images.length > 0) { %>
+
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-4 border-indigo-200 pb-2">
+            Kết Quả cho: "<span class="text-indigo-600"><%= query %></span>" (<%= total_results %> ảnh)
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+            <% images.forEach(function(image) { %>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-[1.03] transition duration-500 ease-in-out hover:shadow-2xl border-2 border-gray-100">
+
+                    <a href="<%= image.links.html %>" target="_blank" class="block h-48 overflow-hidden">
+                        <img
+                                src="<%= image.urls.small %>"
+                                alt="<%= image.alt_description || 'Unsplash Image' %>"
+                                class="w-full h-full object-cover transition duration-500 ease-in-out transform hover:opacity-80"
+                        >
+                    </a>
+
+                    <div class="p-4">
+                        <p class="text-sm font-medium text-gray-600 truncate">
+                            Tác giả:
+                            <a href="<%= image.user.links.html %>" target="_blank" class="text-indigo-500 hover:text-indigo-700">
+                                <%= image.user.name %>
+                            </a>
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Lượt thích: <%= image.likes %>
+                        </p>
+                    </div>
+                </div>
+
+            <% }); %>
+
+        </div>
+
+    <% } else if (typeof query !== 'undefined' && query !== '') { %>
+        <div class="text-center py-12">
+            <p class="text-2xl text-red-500 font-semibold">
+                😢 Không tìm thấy ảnh nào cho từ khóa "<%= query %>".
+            </p>
+        </div>
+    <% } %>
+</div>
